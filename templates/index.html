@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resume Upload | Smart Resume Analyzer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b2a;
+      --muted: #65716c;
+      --paper: #f4f5ef;
+      --surface: #fffefa;
+      --line: #d8ddd3;
+      --green: #246b55;
+      --green-dark: #194b3d;
+      --coral: #d8785b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 6vw, 84px);
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .brand-mark {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      background: var(--green);
+      color: white;
+      font-family: Georgia, serif;
+      font-size: 18px;
+    }
+
+    .step-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      width: min(100% - 40px, 1000px);
+      margin: 0 auto;
+      padding: clamp(54px, 10vh, 100px) 0 72px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: clamp(40px, 8vw, 100px);
+      align-items: center;
+    }
+
+    .intro { animation: arrive 500ms ease-out both; }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--coral);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 440px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 5vw, 62px);
+      font-weight: 400;
+      line-height: 1.04;
+    }
+
+    .intro-copy {
+      max-width: 390px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .upload-panel {
+      padding: clamp(24px, 4vw, 40px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--green);
+      animation: arrive 600ms 80ms ease-out both;
+    }
+
+    .upload-panel h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 25px;
+      font-weight: 400;
+    }
+
+    .panel-copy {
+      margin: 8px 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .file-label {
+      min-height: 184px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 24px;
+      border: 1px dashed #93a69a;
+      background: #f7f8f3;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .file-label:focus-within { outline: 2px solid var(--green); outline-offset: 3px; }
+
+    .upload-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #e2eee6;
+      color: var(--green-dark);
+      font-size: 22px;
+    }
+
+    .file-prompt { font-size: 14px; font-weight: 650; }
+    .file-prompt span { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+    .file-types { color: var(--muted); font-size: 12px; }
+
+    input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    #file-name {
+      min-height: 18px;
+      margin: 12px 0 0;
+      color: var(--green-dark);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 14px;
+      border: 0;
+      background: var(--green);
+      color: white;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: background 160ms ease;
+    }
+
+    button:hover { background: var(--green-dark); }
+    button:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+
+    .notice {
+      margin: 0 0 16px;
+      padding: 11px 13px;
+      border-left: 3px solid var(--green);
+      background: #eaf2eb;
+      font-size: 13px;
+    }
+
+    .notice.error { border-color: var(--coral); background: #fbefeb; }
+
+    .job-description {
+      width: 100%;
+      min-height: 132px;
+      padding: 12px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .job-description:focus { outline: 2px solid var(--green); outline-offset: 2px; }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .consent-row input { width: 16px; height: 16px; margin: 1px 0 0; accent-color: var(--green); flex: 0 0 auto; }
+
+    .field-label {
+      display: block;
+      margin: 20px 0 8px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .results-panel {
+      grid-column: 1 / -1;
+      padding: clamp(24px, 4vw, 40px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      animation: arrive 450ms ease-out both;
+    }
+
+    .results-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .results-heading h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 26px;
+      font-weight: 400;
+    }
+
+    .results-heading p { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    .score { color: var(--green-dark); font-family: Georgia, serif; font-size: 42px; white-space: nowrap; }
+    .score-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 11px; text-align: right; text-transform: uppercase; }
+    .results-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding-top: 22px; }
+    .results-columns h3 { margin: 0 0 12px; font-size: 13px; }
+    .term-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .term { padding: 6px 9px; border: 1px solid var(--line); font-size: 12px; }
+    .term.matched { border-color: #b4cfc0; background: #eaf2eb; }
+    .term.missing { border-color: #e3c7bc; background: #fbefeb; }
+    .empty-list { color: var(--muted); font-size: 13px; }
+    .results-note { margin: 24px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .analysis-summary { margin: 22px 0 0; font-size: 15px; line-height: 1.6; }
+    .recommendations { margin-top: 22px; }
+    .recommendations h3 { margin: 0 0 10px; font-size: 13px; }
+    .recommendations ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .report-button { width: auto; min-height: 42px; margin-top: 16px; padding: 0 15px; border: 1px solid var(--green); background: transparent; color: var(--green-dark); }
+    .report-button:hover { background: #eaf2eb; }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      header { height: 64px; padding-inline: 20px; }
+      main { grid-template-columns: 1fr; gap: 34px; padding-top: 48px; }
+      h1 { max-width: 500px; }
+      .intro-copy { margin-top: 15px; }
+      .results-columns { grid-template-columns: 1fr; gap: 22px; }
+      .results-heading { align-items: flex-start; }
+      .score { font-size: 34px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="brand-mark" aria-hidden="true">S</span> Smart Resume Analyzer</div>
+    <div class="step-label">Resume upload</div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Make your next move</p>
+      <h1 id="page-title">Start with your resume.</h1>
+      <p class="intro-copy">Compare the experience in your resume with the skills and requirements in a job description.</p>
+    </section>
+
+    <section class="upload-panel" aria-labelledby="upload-title">
+      <h2 id="upload-title">Upload a resume</h2>
+      <p class="panel-copy">Your resume and job description are sent to Groq for AI analysis. The app does not store your resume.</p>
+
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <p class="notice {{ category }}" role="status">{{ message }}</p>
+      {% endfor %}
+      {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        <label class="file-label" for="resume">
+          <span class="upload-icon" aria-hidden="true">↑</span>
+          <span class="file-prompt">Choose a resume file</span>
+          <span class="file-types">PDF or DOCX · up to 10 MB</span>
+          <input id="resume" name="resume" type="file" accept=".pdf,.docx" required>
+        </label>
+        <p id="file-name" aria-live="polite"></p>
+        <label class="field-label" for="job-description">Job description</label>
+        <textarea class="job-description" id="job-description" name="job_description" placeholder="Paste the role requirements here" required>{{ job_description }}</textarea>
+        <label class="consent-row">
+          <input type="checkbox" name="groq_consent" value="yes" required>
+          <span>I agree to send my resume and job description to Groq for analysis.</span>
+        </label>
+        <button type="submit">Analyze resume</button>
+      </form>
+    </section>
+
+    {% if analysis %}
+      <section class="results-panel" aria-labelledby="results-title" aria-live="polite">
+        <div class="results-heading">
+          <div>
+            <h2 id="results-title">Resume analysis</h2>
+            <p>{{ filename }} · {{ analysis.total }} {{ analysis.match_type }} considered</p>
+          </div>
+          <div>
+            <span class="score-label">Keyword coverage</span>
+            <div class="score" aria-label="{{ analysis.score }} percent coverage">{{ analysis.score }}%</div>
+          </div>
+        </div>
+        <div class="results-columns">
+          <div>
+            <h3>Found in your resume · {{ analysis.matched|length }}</h3>
+            <div class="term-list">
+              {% for term in analysis.matched %}<span class="term matched">{{ term }}</span>{% else %}<span class="empty-list">No matching terms found.</span>{% endfor %}
+            </div>
+          </div>
+          <div>
+            <h3>Not found · {{ analysis.missing|length }}</h3>
+            <div class="term-list">
+              {% for term in analysis.missing %}<span class="term missing">{{ term }}</span>{% else %}<span class="empty-list">All compared terms were found.</span>{% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="analysis-summary" id="analysis-summary">{{ analysis.summary }}</p>
+        {% if analysis.recommendations %}
+          <div class="recommendations">
+            <h3>Ways to strengthen your resume</h3>
+            <ul>
+              {% for recommendation in analysis.recommendations %}<li>{{ recommendation }}</li>{% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <p class="results-note">AI-generated feedback may be inaccurate. Review every suggestion and include only information that is true.</p>
+        <button class="report-button" id="download-report" type="button" data-filename="{{ filename }}" data-match-type="{{ analysis.match_type }}" data-score="{{ analysis.score }}">Download report</button>
+      </section>
+    {% endif %}
+  </main>
+
+  <script>
+    const resumeInput = document.querySelector("#resume");
+    const fileName = document.querySelector("#file-name");
+    resumeInput.addEventListener("change", () => {
+      fileName.textContent = resumeInput.files[0]?.name ?? "";
+    });
+
+    const reportButton = document.querySelector("#download-report");
+    if (reportButton) {
+      reportButton.addEventListener("click", () => {
+        const matched = [...document.querySelectorAll(".term.matched")].map((term) => term.textContent).join(", ") || "None";
+        const missing = [...document.querySelectorAll(".term.missing")].map((term) => term.textContent).join(", ") || "None";
+        const report = [
+          "Smart Resume Analyzer - Resume analysis",
+          `Resume: ${reportButton.dataset.filename}`,
+          `${reportButton.dataset.matchType} coverage: ${reportButton.dataset.score}%`,
+          document.querySelector("#analysis-summary").textContent,
+          "AI-generated feedback may be inaccurate. Review every suggestion and include only information that is true.",
+          "",
+          `Found in resume: ${matched}`,
+          `Not found: ${missing}`,
+        ].join("\n");
+        const reportUrl = URL.createObjectURL(new Blob([report], { type: "text/plain;charset=utf-8" }));
+        const downloadLink = document.createElement("a");
+        downloadLink.href = reportUrl;
+        downloadLink.download = `${reportButton.dataset.filename.replace(/\.[^.]+$/, "")}-analysis.txt`;
+        document.body.append(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+        window.setTimeout(() => URL.revokeObjectURL(reportUrl), 1000);
+      });
+    }
+  </script>
+</body>
+</html>
